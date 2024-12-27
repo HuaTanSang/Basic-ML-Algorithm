@@ -3,7 +3,7 @@
 #include <VectorCalculation.cpp>
 
 
-class MatrixCalculation
+class MatrixCalculation : public VectorCalculator
 {
 public:
 
@@ -13,8 +13,8 @@ public:
     vector<vector<double>> tranpose(vector<vector<double>> A); 
     vector<vector<double>> inverse(vector<vector<double>> A); 
     vector<vector<double>> matmul(vector<vector<double>> X, vector<vector<double>> Y); 
-    vector<vector<double>> dot_product(vector<vector<double>> X, vector<vector<double>> Y); 
-    vector<vector<double>> coef_product(vector<vector<double>> X, double coef_); 
+    vector<vector<double>> product(vector<vector<double>> X, vector<vector<double>> Y); 
+    vector<vector<double>> product(double coef_, vector<vector<double>> X); 
     double det(vector<vector<double>> A); 
 
 
@@ -87,13 +87,19 @@ public:
         }
 
         // Overlap 
-
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++) 
+            {
+                pow(-1, i + j) * A[i][j] * det()
+            }
+        }
 
 
     }
 
     // Dot product of matrix and a number
-    vector<vector<double>> coef_product(vector<vector<double>> X, double coef_)
+    vector<vector<double>> product(double coef_, vector<vector<double>> X)
     {
         vector<vector<double>> result_matrix = X; 
 
@@ -118,7 +124,7 @@ public:
     }
 
     // Dot product of two matrix 
-    vector<vector<double>> dot_product(vector<vector<double>> X, vector<vector<double>> Y) 
+    vector<vector<double>> product(vector<vector<double>> X, vector<vector<double>> Y) 
     {
         // Require X and Y has the same dimension
         if (X.size() != Y.size() && X[0].size() != Y[0].size())
