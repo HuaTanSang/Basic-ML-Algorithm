@@ -1,14 +1,15 @@
-#include <bits/stdc++.h>
+#include <MatrixCalculator.cpp> 
 
 using namespace std; 
 
-class LinearRegression
+class LinearRegression : private MatrixCalculation
 {
 private: 
     vector<vector<double>> X; 
     vector<double> y; 
     
-    vector<double> theta_; 
+    vector<double> W; 
+    vector<double> b; 
     
 public: 
     
