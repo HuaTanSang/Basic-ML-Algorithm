@@ -86,6 +86,18 @@ public:
             return A[0][0]*A[1][1] - A[0][1]*A[1][0]; 
         }
 
+        // Calculating on row 
+        size_t nums_iters = n - 2; 
+
+        for (int i = 0; i < nums_iters; i++)
+        {
+            for (int j = 0; i < A[0].size(); j++) 
+            {
+                
+            }
+        }
+
+
         // Overlap 
         for (int i = 0; i < n; i++)
         {
