@@ -8,29 +8,29 @@ class MatrixCalculation : public VectorCalculator
 public:
 
     /* Declare name of function */  
-    vector<vector<double>> zeros(size_t dimension); 
-    vector<vector<double>> eye(size_t dimension); 
-    vector<vector<double>> tranpose(vector<vector<double>> A); 
-    vector<vector<double>> inverse(vector<vector<double>> A); 
-    vector<vector<double>> matmul(vector<vector<double>> X, vector<vector<double>> Y); 
-    vector<vector<double>> product(vector<vector<double>> X, vector<vector<double>> Y); 
-    vector<vector<double>> product(double coef_, vector<vector<double>> X); 
-    double det(vector<vector<double>> A); 
+    vector<vector<double_t>> zeros(size_t dimension); 
+    vector<vector<double_t>> eye(size_t dimension); 
+    vector<vector<double_t>> tranpose(vector<vector<double_t>> A); 
+    vector<vector<double_t>> inverse(vector<vector<double_t>> A); 
+    vector<vector<double_t>> matmul(vector<vector<double_t>> X, vector<vector<double_t>> Y); 
+    vector<vector<double_t>> product(vector<vector<double_t>> X, vector<vector<double_t>> Y); 
+    vector<vector<double_t>> product(double_t coef_, vector<vector<double_t>> X); 
+    double_t det(vector<vector<double_t>> A); 
 
 
     /* Define function*/
-
+    
     // Zero matrix 
-    vector<vector<double>> zeros(size_t dimension)
+    vector<vector<double_t>> zeros(size_t dimension)
     {
-        vector<vector<double>> zeros_matrix(dimension, vector<double>(dimension, 0.0)); 
+        vector<vector<double_t>> zeros_matrix(dimension, vector<double_t>(dimension, 0.0)); 
         return zeros_matrix; 
     }
     
     // Eye matrix
-    vector<vector<double>> eye(size_t dimension)
+    vector<vector<double_t>> eye(size_t dimension)
     {
-        vector<vector<double>> eye_matrix(dimension, vector<double>(dimension, 0.0)); 
+        vector<vector<double_t>> eye_matrix(dimension, vector<double_t>(dimension, 0.0)); 
         
         for (size_t i = 0; i < dimension; i++) 
         {
@@ -47,12 +47,12 @@ public:
     } 
 
     // Transpose matrix 
-    vector<vector<double>> tranpose(vector<vector<double>> A)
+    vector<vector<double_t>> tranpose(vector<vector<double_t>> A)
     {
         int rows = A.size(); 
         int columns = A[0].size(); 
 
-        vector<vector<double>> transposed(rows, vector<double>(columns, 0.0)); 
+        vector<vector<double_t>> transposed(rows, vector<double_t>(columns, 0.0)); 
 
         for (int i = 0; i < rows; i++)
         {
@@ -65,14 +65,15 @@ public:
         return transposed; 
     }
 
-    // Calculate determinant (trying to use dynamic programming)
-    double det(vector<vector<double>> A)
+    // Calculate determinant (trying to use dynamic programming, currently use recursion)
+    double_t determinant(vector<vector<double_t>> A)
     {
         if (A.size() != A[0].size())
         {
             throw runtime_error("Can not calculate determinant due to dimension mismatch!"); 
         }
 
+        double_t det = 0.0; 
         size_t n = A.size(); 
         
         // Basecase 
@@ -86,34 +87,35 @@ public:
             return A[0][0]*A[1][1] - A[0][1]*A[1][0]; 
         }
 
-        // Calculating on row 
-        size_t nums_iters = n - 2; 
-
-        for (int i = 0; i < nums_iters; i++)
+        // Calculating determinant for matrices larger than 2x2
+        for (size_t i = 0; i < n; i++)
         {
-            for (int j = 0; i < A[0].size(); j++) 
+            // Create submatrix by excluding row i and column 0
+            vector<vector<double_t>> sub_matrix(n - 1, vector<double_t>(n - 1));
+            
+            for (size_t p = 1; p < n; p++)  // Start from row 1 (exclude the first row)
             {
-                
+                size_t sub_col = 0;  // Column index for submatrix
+                for (size_t q = 0; q < n; q++)
+                {
+                    if (q == i)  // Skip the current column
+                        continue;
+                    sub_matrix[p - 1][sub_col] = A[p][q]; 
+                    sub_col++;
+                }
             }
+
+            // Recursively calculate determinant
+            det += pow(-1, i) * A[0][i] * determinant(sub_matrix); 
         }
 
-
-        // Overlap 
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++) 
-            {
-                pow(-1, i + j) * A[i][j] * det()
-            }
-        }
-
-
+        return det;
     }
 
     // Dot product of matrix and a number
-    vector<vector<double>> product(double coef_, vector<vector<double>> X)
+    vector<vector<double_t>> product(double_t coef_, vector<vector<double_t>> X)
     {
-        vector<vector<double>> result_matrix = X; 
+        vector<vector<double_t>> result_matrix = X; 
 
         for (int i = 0; i < result_matrix.size(); i++) 
         {
@@ -127,7 +129,7 @@ public:
     }
 
     // Inverse matrix 
-    vector<vector<double>> inverse(vector<vector<double>> A)
+    vector<vector<double_t>> inverse(vector<vector<double_t>> A)
     {
         /*For complexity reason of this project. I decided to use regularization 
         instead of persuedo-inverse matrix when the matrix is not invertible. */
@@ -136,7 +138,7 @@ public:
     }
 
     // Dot product of two matrix 
-    vector<vector<double>> product(vector<vector<double>> X, vector<vector<double>> Y) 
+    vector<vector<double_t>> product(vector<vector<double_t>> X, vector<vector<double_t>> Y) 
     {
         // Require X and Y has the same dimension
         if (X.size() != Y.size() && X[0].size() != Y[0].size())
@@ -144,7 +146,7 @@ public:
             throw runtime_error("Can not conduct dot product due to dimension mismatch!"); 
         }
 
-        vector<vector<double>> results_matrix(X.size(), vector<double> (X[0].size(), 1)); 
+        vector<vector<double_t>> results_matrix(X.size(), vector<double_t> (X[0].size(), 1)); 
 
         for (int i = 0; i < X.size(); i++)
         {
@@ -159,7 +161,7 @@ public:
 
 
     // Element-wise multiply two matrix
-    vector<vector<double>> matmul(vector<vector<double>> X, vector<vector<double>> Y)
+    vector<vector<double_t>> matmul(vector<vector<double_t>> X, vector<vector<double_t>> Y)
     {
         if (X[0].size() != Y.size())
         {
@@ -170,7 +172,7 @@ public:
         size_t columns = Y[0].size(); 
         size_t inner_dim = Y.size(); 
 
-        vector<vector<double>> result(rows, vector<double>(columns, 0.0));
+        vector<vector<double_t>> result(rows, vector<double_t>(columns, 0.0));
         
         for (int i = 0; i < rows; i++)
         {
